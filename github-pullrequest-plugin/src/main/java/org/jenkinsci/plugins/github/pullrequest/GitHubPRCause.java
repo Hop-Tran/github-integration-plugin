@@ -54,6 +54,8 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
     private String state;
     private String commentBody;
     private String commentBodyMatch;
+    /* Hop.T */
+    private boolean isMerged;
 
     public GitHubPRCause() {
     }
@@ -85,7 +87,7 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
                 pr.isMergeable(), pr.getBaseRef(), pr.getHeadRef(),
                 pr.getUserEmail(), pr.getTitle(), pr.getHtmlUrl(), pr.getSourceRepoOwner(),
                 pr.getLabels(),
-                triggerSender, skip, reason, "", "", pr.getState());
+                triggerSender, skip, reason, "", "", pr.getState(), pr.isMerged());
         this.body = pr.getBody();
         if (localRepo != null) {
             withLocalRepo(localRepo);
@@ -107,7 +109,7 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
                          String title, URL htmlUrl, String sourceRepoOwner, Set<String> labels,
                          GHUser triggerSender, boolean skip, String reason,
                          String commitAuthorName, String commitAuthorEmail,
-                         String state) {
+                         String state, boolean isMerged) {
         // CHECKSTYLE:ON
         this.headSha = headSha;
         this.number = number;
@@ -123,7 +125,9 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
         withReason(reason);
         this.commitAuthorName = commitAuthorName;
         this.commitAuthorEmail = commitAuthorEmail;
-
+        /* Hop.T */
+        this.isMerged = isMerged;
+        
         if (nonNull(triggerSender)) {
             try {
                 this.triggerSenderName = triggerSender.getName();
@@ -160,7 +164,7 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
                 orig.getTargetBranch(), orig.getSourceBranch(),
                 orig.getPRAuthorEmail(), orig.getTitle(),
                 orig.getHtmlUrl(), orig.getSourceRepoOwner(), orig.getLabels(), null,
-                orig.isSkip(), orig.getReason(), orig.getCommitAuthorName(), orig.getCommitAuthorEmail(), orig.getState());
+                orig.isSkip(), orig.getReason(), orig.getCommitAuthorName(), orig.getCommitAuthorEmail(), orig.getState(), orig.isMerged());
         withTriggerSenderName(orig.getTriggerSenderEmail());
         withTriggerSenderEmail(orig.getTriggerSenderEmail());
         withBody(orig.getBody());
@@ -271,6 +275,12 @@ public class GitHubPRCause extends GitHubCause<GitHubPRCause> {
      */
     public GitHubPRCause withCommitAuthorEmail(String commitAuthorEmail) {
         this.commitAuthorEmail = commitAuthorEmail;
+        return this;
+    }
+    
+    /* Hop.T */
+    public GitHubPRCause withIsMerged(boolean isMerged) {
+        this.isMerged = isMerged;
         return this;
     }
 
