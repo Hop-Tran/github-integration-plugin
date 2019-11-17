@@ -195,6 +195,11 @@ public class GitHubPRPullRequest {
     public String getSourceRepoOwner() {
         return sourceRepoOwner;
     }
+    
+    /* Hop.T */
+    public boolean isMerged() {
+        return isNull(isMerged) ? false : isMerged;
+    }
 
     /**
      * @see #state
