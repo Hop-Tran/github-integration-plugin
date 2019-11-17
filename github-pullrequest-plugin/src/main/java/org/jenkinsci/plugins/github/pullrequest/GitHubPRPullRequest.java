@@ -55,6 +55,8 @@ public class GitHubPRPullRequest {
     private String state;
 
     private boolean inBadState = false;
+    /* Hop.T */
+    private Boolean isMerged = false;
 
     /**
      * Save only what we need for next comparison
@@ -115,6 +117,14 @@ public class GitHubPRPullRequest {
         } catch (IOException e) {
             LOGGER.error("Can't get mergeable status.", e);
             mergeable = false;
+        }
+        
+        /* Hop.T */
+        try {
+            isMerged = execute(pr::isMerged);
+        } catch (IOException e) {
+            LOGGER.error("Can't get merge status.", e);
+            isMerged = false;
         }
 
         state = pr.getState().toString();
